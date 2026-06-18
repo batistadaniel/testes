@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobilidade DF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f8fafc; 
+            --text-color: #334155;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+        }
+
+        .conteudo {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            width: 100%;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 40px;
+        }
+
+        .titulo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        /* Container do Grid limitado para não espalhar muito em telas grandes */
+        .opcoes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 colunas por padrão */
+            gap: 12px;
+            width: 100%;
+            max-width: 400px; /* Mantém o app compacto e os quadrados menores */
+        }
+
+        /* Classe única e simples para todos os quadrados */
+        .opcao {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            aspect-ratio: 1 / 1; /* Quadrado perfeito */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.1s ease;
+            user-select: none;
+        }
+
+        /* Efeito de clique simples */
+        .opcao:active {
+            transform: scale(0.96);
+            background-color: #f1f5f9;
+        }
+
+        /* Responsividade para telas maiores (tablets/desktops) mudando para 4 colunas menores */
+        @media (min-width: 480px) {
+            .opcoes {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="conteudo">
+        <h1 class="titulo">Mobilidade DF</h1>
+
+        <div class="opcoes">
+            <div class="opcao">Linhas e Horários</div>
+            <div class="opcao">Mapa de Veículos</div>
+            <div class="opcao">Mapa de Paradas</div>
+            <div class="opcao">Alertas</div>
+            <div class="opcao">Notícias</div>
+            <div class="opcao">Linhas Favoritas</div>
+            <div class="opcao">Paradas Favoritas</div>
+            <div class="opcao">Sobre</div>
+        </div>
+    </main>
+
+    <script>
+        // JS unificado e simples pegando a classe comum '.opcao'
+        document.addEventListener('DOMContentLoaded', () => {
+            const opcoes = document.querySelectorAll('.opcao');
+            
+            opcoes.forEach(botao => {
+                botao.addEventListener('click', () => {
+                    console.log(`Clicou em: ${botao.textContent.trim()}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
