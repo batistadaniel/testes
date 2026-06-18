@@ -19,8 +19,11 @@
             --card-border: #c5c5c5;
         }
 
-        .conteudo {
+        body {
             background-color: var(--bg-color);
+        }
+
+        .conteudo {
             color: var(--text-color);
             width: 100%;
             height: 100dvh;
@@ -28,12 +31,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start; 
-            padding: 7dvh 16px 16px 16px; 
-            gap: 28px;
+            padding: 4dvh 16px 16px 16px; 
+            gap: 24px;
             overflow: hidden;
         }
 
-        /* Classes utilitárias para alternar telas */
         .d-none {
             display: none !important;
         }
@@ -41,7 +43,7 @@
         .titulo {
             font-size: 2.2rem;
             font-weight: 800;
-            text-align: center;
+            text-align: center; /* Sempre centralizado no menu inicial */
             letter-spacing: -1px;
             flex-shrink: 0;
             width: 100%;
@@ -74,7 +76,7 @@
             cursor: pointer;
             transition: transform 0.1s ease, background-color 0.1s ease;
             user-select: none;
-            max-height: calc((100dvh - 180px) / 4); 
+            max-height: calc((100dvh - 160px) / 4); 
         }
 
         .opcao:active {
@@ -82,10 +84,10 @@
             background-color: #f1f5f9;
         }
 
-        /* --- Nova Tela: Pesquisa de Linhas --- */
+        /* --- Tela de Pesquisa --- */
         .tela-busca {
             width: 100%;
-            max-width: 400px;
+            max-width: 100%; 
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -97,6 +99,7 @@
             align-items: center;
             gap: 12px;
             flex-shrink: 0;
+            width: 100%;
         }
 
         .btn-voltar {
@@ -123,52 +126,60 @@
             border-color: #0f172a;
         }
 
-        /* Lista rolável de linhas */
+        /* Lista com scroll ocultado */
         .lista-linhas {
             flex: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding-bottom: 20px;
+            padding-bottom: 30px;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
         }
 
-        /* Item da linha (Formato de listagem limpa) */
+        .lista-linhas::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Alinhamento dos itens à esquerda */
         .linha-item {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 16px; 
+            justify-content: flex-start; 
             cursor: pointer;
             transition: background-color 0.1s ease;
+            width: 100%;
         }
 
         .linha-item:active {
             background-color: #f1f5f9;
         }
 
-        /* Badge/Indicador visual baseado na cor da linha da API */
         .linha-badge {
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 6px;
             font-weight: 700;
             font-size: 0.9rem;
-            min-width: 65px;
+            min-width: 75px;
             text-align: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-shrink: 0; 
         }
 
+        /* Nome da linha alinhado à esquerda e expandido para baixo */
         .linha-nome {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            text-align: right;
-            max-width: 70%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-align: left; /* Garante que o texto comece na esquerda */
+            line-height: 1.4;
+            white-space: normal; 
+            word-wrap: break-word;
         }
 
         .mensagem-status {
@@ -178,12 +189,12 @@
             color: #64748b;
         }
 
-        /* Ajustes específicos para o Computador / Tablet */
+        /* --- Ajustes específicos para Desktop --- */
         @media (min-width: 480px) {
             .conteudo {
                 justify-content: center; 
-                padding: 16px;
-                gap: 40px;
+                padding: 40px;
+                gap: 32px;
             }
             .conteudo.no-center {
                 justify-content: flex-start;
@@ -202,7 +213,8 @@
                 padding: 16px;
             }
             .tela-busca {
-                max-width: 500px;
+                max-width: 800px; /* Mantém a lista de busca larga no PC */
+                margin: 0 auto;
             }
         }
     </style>
@@ -236,29 +248,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Elementos das Telas
             const containerPrincipal = document.getElementById('container-principal');
             const appTitulo = document.getElementById('app-titulo');
             const menuInicial = document.getElementById('menu-inicial');
             const telaLinhas = document.getElementById('tela-linhas');
             
-            // Elementos de Ação
             const btnLinhas = document.getElementById('btn-linhas');
             const btnVoltar = document.getElementById('btn-voltar');
             const inputPesquisa = document.getElementById('input-pesquisa');
             const listaLinhas = document.getElementById('lista-linhas');
 
-            // Estado da aplicação
             let todasAsLinhas = [];
-            let idLinhaSelecionado = null; // Guardará o ID para uso futuro
+            let idLinhaSelecionado = null;
 
-            // --- Transição de Telas ---
+            // Transição de Telas
             btnLinhas.addEventListener('click', () => {
-                appTitulo.classList.add('d-none');
+                appTitulo.classList.add('d-none'); // Ocultei o nome no topo ao pesquisar
                 menuInicial.classList.add('d-none');
                 telaLinhas.classList.remove('d-none');
-                
-                // Ajuste visual para computadores não centralizarem a lista verticalmente
                 containerPrincipal.classList.add('no-center');
                 
                 inputPesquisa.value = '';
@@ -267,12 +274,12 @@
 
             btnVoltar.addEventListener('click', () => {
                 telaLinhas.classList.add('d-none');
-                appTitulo.classList.remove('d-none');
+                appTitulo.classList.remove('d-none'); // Nome reaparece no centro ao voltar
                 menuInicial.classList.remove('d-none');
                 containerPrincipal.classList.remove('no-center');
             });
 
-            // --- Requisição da API ---
+            // Requisição da API
             async function buscarDadosLinhas() {
                 if (todasAsLinhas.length > 0) {
                     renderizarLinhas(todasAsLinhas);
@@ -286,7 +293,6 @@
                     const data = await response.json();
                     
                     if (data && data.linhas) {
-                        // Organização: Metrô (codigo_linha null) sempre vai para o topo
                         todasAsLinhas = data.linhas.sort((a, b) => {
                             if (a.codigo_linha === null && b.codigo_linha !== null) return -1;
                             if (a.codigo_linha !== null && b.codigo_linha === null) return 1;
@@ -297,26 +303,25 @@
                         listaLinhas.innerHTML = '<div class="mensagem-status">Erro ao processar os dados.</div>';
                     }
                 } catch (error) {
-                    console.error('Erro na requisição:', error);
+                    console.error('Erro:', error);
                     listaLinhas.innerHTML = '<div class="mensagem-status">Erro ao conectar com o servidor.</div>';
                 }
             }
 
-            // --- Renderização da Lista ---
+            // Renderização
             function renderizarLinhas(linhasFiltradas) {
                 if (linhasFiltradas.length === 0) {
                     listaLinhas.innerHTML = '<div class="mensagem-status">Nenhuma linha encontrada.</div>';
                     return;
                 }
 
-                listaLinhas.innerHTML = ''; // Limpa a lista anterior
+                listaLinhas.innerHTML = '';
 
                 linhasFiltradas.forEach(linha => {
                     const item = document.createElement('div');
                     item.className = 'linha-item';
                     
-                    // Tratamento caso o código seja nulo (Metrô)
-                    const codigoExibido = linha.codigo_linha ? linha.codigo_linha : 'METRÔ';
+                    const codigoExibido = inlineCodigo = linha.codigo_linha ? linha.codigo_linha : 'METRÔ';
                     
                     item.innerHTML = `
                         <div class="linha-badge" style="background-color: ${linha.cor}; color: ${linha.cor_texto || '#000000'}">
@@ -325,19 +330,16 @@
                         <div class="linha-nome">${linha.nome_linha}</div>
                     `;
 
-                    // Clique no item da listagem
                     item.addEventListener('click', () => {
-                        idLinhaSelecionado = linha.id_linha; // Guarda para o futuro
-                        
-                        alert(`Linha Selecionada com Sucesso!\n\nID Guardado: ${idLinhaSelecionado}\nCódigo: ${codigoExibido}\nNome: ${linha.nome_linha}\nTarifa: R$ ${linha.tarifa.toFixed(2)}`);
-                        console.log(`ID armazenado para uso futuro: ${idLinhaSelecionado}`, linha);
+                        idLinhaSelecionado = linha.id_linha;
+                        alert(`Linha Selecionada!\n\nID: ${idLinhaSelecionado}\nCódigo: ${codigoExibido}\nNome: ${linha.nome_linha}`);
                     });
 
                     listaLinhas.appendChild(item);
                 });
             }
 
-            // --- Filtro com Mecanismo Debounce ---
+            // Debounce Filtro
             function debounce(func, timeout = 300) {
                 let timer;
                 return (...args) => {
@@ -356,7 +358,7 @@
 
                 const filtradas = todasAsLinhas.filter(linha => {
                     const codigo = (linha.codigo_linha || 'metro').toLowerCase();
-                    const nome = linha.nome_linha.toLowerCase();
+                    const nome = inlineNome = linha.nome_linha.toLowerCase();
                     return codigo.includes(termo) || nome.includes(termo);
                 });
 
